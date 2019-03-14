@@ -1,0 +1,29 @@
+.vis-panel.vis-vertical {
+    display: none;
+}
+
+.vis-panel.vis-background.vis-horizontal .vis-grid.vis-horizontal {
+    border-bottom-style: dotted;
+}
+
+.vis-data-axis .vis-y-axis.vis-minor {
+    color: #4d4d4d;
+}
+
+.vis-panel.vis-background.vis-horizontal .vis-grid.vis-major {
+    border-color: #e5e5e5;
+}
+
+.vis-panel.vis-bottom {
+    border: 0;
+}
+
+.vis-timeline.vis-bottom {
+    border-bottom: 0;
+    border-left: 0;
+    border-right: 0;
+}
+
+.vis-panel.vis-center {
+    border-left: 0;
+}
