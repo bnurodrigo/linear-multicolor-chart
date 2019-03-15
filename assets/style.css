@@ -1,5 +1,5 @@
-.vis-panel.vis-vertical {
-    display: none;
+body {
+    margin: 50px 0 0 0;
 }
 
 .vis-panel.vis-background.vis-horizontal .vis-grid.vis-horizontal {
@@ -26,4 +26,90 @@
 
 .vis-panel.vis-center {
     border-left: 0;
+    border-right: 0;
+}
+
+.label-y-axis {
+    text-align: center;
+    width: 50px;
+}
+
+.vis-data-axis {
+    width: 200px !important;
+}
+
+.vis-data-axis .vis-y-axis.vis-major,
+.vis-data-axis .vis-y-axis.vis-minor {
+    font-size: 14px;
+    line-height: 17px;
+    color: #838381;
+    width: 25%;
+    left: 75% !important;
+    text-align: center !important;
+}
+
+.vis-time-axis .vis-text {
+    font-size: 14px;
+    color: #838381;
+}
+
+.vis-data-axis .vis-y-axis.vis-title.vis-left {
+    color: #000;
+    -webkit-transform-origin: initial;
+    -moz-transform-origin: initial;
+    -ms-transform-origin: initial;
+    -o-transform-origin: initial;
+    transform-origin: initial;
+    -webkit-transform: initial;
+    -moz-transform: initial;
+    -ms-transform: initial;
+    -o-transform: initial;
+    transform: initial;
+    left: initial !important;
+    width: 75% !important;
+    height: 100% !important;
+    display: -webkit-box;
+    display: -moz-box;
+    display: -ms-flexbox;
+    display: -webkit-flex;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.vis-data-axis .vis-y-axis.vis-title.vis-left .title {
+    font-weight: bold;
+    font-size: 15px;
+}
+
+.vis-data-axis .vis-y-axis.vis-title.vis-left .subtitle {
+    font-size: 14px;
+}
+
+.vis-time-axis .vis-grid.vis-major {
+    border-color: #e5e5e5;
+}
+
+.vis-panel.vis-left {
+    background-color: #fff;
+}
+
+.vis-panel.vis-center, 
+.vis-panel.vis-left, 
+.vis-timeline.vis-bottom  {
+    border-width: 2px;
+}
+
+.vis-time-axis .vis-grid.vis-vertical.vis-odd,
+.vis-time-axis .vis-grid.vis-vertical.vis-even {
+    border: none;
+}
+
+.vis-time-axis .vis-grid.vis-vertical.vis-odd {
+    background-color: #fff;
+}
+
+.vis-time-axis .vis-grid.vis-vertical.vis-even {
+    background-color: #f6f6f6;
+    height: 202px !important;
 }
