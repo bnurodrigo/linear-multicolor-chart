@@ -43,31 +43,51 @@ var options = {
     }
 };
 
+// Retorna o valor referente ao agrupamento do item 
+var getGroupValue = function (val) {
+    if (val <= 4) {
+        return 0;
+    } else if (val > 4 && val <= 8) {
+        return 1;
+    } else if (val > 8 && val <= 20) {
+        return 2;
+    } else if (val > 20 && val <= 30) {
+        return 3;
+    } else if (val > 30 && val <= 35) {
+        return 4;
+    } else if (val > 35 && val <= 36) {
+        return 5;
+    } else {
+        return 6;
+    }
+}
+
 // Agrupando os itens e vinculando ao grupo
 var groupItems = function (items) {
-    items.forEach(function (item) {
-        if (item.y <= 4) {
-            item.group = 0;
-            item.y = 0;
-        } else if (item.y > 4 && item.y <= 8) {
-            item.group = 1;
-            item.y = 1;
-        } else if (item.y > 8 && item.y <= 20) {
-            item.group = 2;
-            item.y = 2;
-        } else if (item.y > 20 && item.y <= 30) {
-            item.group = 3;
-            item.y = 3;
-        } else if (item.y > 30 && item.y <= 35) {
-            item.group = 4;
-            item.y = 4;
-        } else if (item.y > 35 && item.y <= 36) {
-            item.group = 5;
-            item.y = 5;
-        } else {
-            item.group = 6;
-            item.y = 6;
+    var currentGroup;
+    var group = 0;
+    var itemJunctions = [];
+
+    items.forEach(function (item, i) {
+        item.y = getGroupValue(item.y);
+
+        if (currentGroup !== item.y) {
+            currentGroup = item.y;
+            group++;
         }
+
+        if (i !== items.length - 1) {
+            itemJunctions[i + 1] = { x: items[i + 1].x, y: getGroupValue(items[i + 1].y), group: group, custom: true };
+        }
+
+        item.group = group;
+    });
+
+    // Mergando os arrays para criar a continuação dos pontos
+    var totalMerged = 0;
+    itemJunctions.forEach(function (item, i) {
+        items.splice(i + totalMerged, 0, item);
+        totalMerged++;
     });
 
     return items;
@@ -84,7 +104,7 @@ var generateRandomInt = function (min, max) {
 var generateItems = function (length) {
     var items = [];
     var d = new Date(2010, 10, 10);
-        
+
     for (let i = 0; i < length; i++) {
         items.push({ x: new Date(d.getTime() + (i * 60 * 60 * 1000)), y: generateRandomInt(0, 40) });
     }
@@ -92,38 +112,31 @@ var generateItems = function (length) {
     return groupItems(items);
 };
 
-
-// Criando os grupos
-var getGroups = function (length) {
-    let groups = [];
-    let colorIndex = 0;
-
-    for (let i = 0; i < length; i++) {
-        if (colorIndex > 4) colorIndex = 0;
-        let color = lineColors[colorIndex];
-
-        groups.push({
-            id: i,
-            style: 'stroke:' + color + ';',
-            options: { drawPoints: { styles: 'stroke:' + color + '; fill:' + color + ';' } }
-        });
-
+// Retorna a cor pelo index
+var getLineColor = function (index) {
+    var colorIndex = 0;
+    for (let i = 0; i <= index; i++) {
+        if (colorIndex > lineColors.length - 1) colorIndex = 0;
+        if (i === index) return lineColors[colorIndex];
         colorIndex++;
     }
-
-    return groups;
+    return '#cccccc';
 };
 
-// Removendo os pontos intermediários das linhas
-var removeIntermediatePoints = function () {
-    for (let i = 0; i < groupLength; i++) {
-        let points = document.querySelectorAll('.vis-graph-group' + i + '.vis-point');
-        points.forEach(function (point, i) {
-            if (i !== 0 && i !== points.length - 1) {
-                point.style.display = 'none';
-            }
-        });
-    }
+// Criando os grupos já com as cores correspondentes
+var getGroups = function (items) {
+    var groups = [];
+
+    items.reverse().forEach(item => {
+        let color = getLineColor(item.y);
+        groups[item.group -1] = {
+            id: item.group,
+            style: 'stroke:' + color + ';',
+            options: { drawPoints: { styles: 'stroke:' + color + '; fill:' + color + ';' } }
+        };
+    });
+
+    return groups;
 };
 
 // Adicionando cores aos labels do eixo y
@@ -132,7 +145,7 @@ var addLabelColor = function () {
     let colorIndex = 0;
 
     labels.forEach(function (label, i) {
-        if (colorIndex > 4) colorIndex = 0;
+        if (colorIndex > labelColors.length - 1) colorIndex = 0;
         let color = labelColors[colorIndex];
 
         label.style.backgroundColor = color;
@@ -141,23 +154,11 @@ var addLabelColor = function () {
     });
 };
 
-var connectPoints = function () {
-    let points = [];
-    document.querySelectorAll('.vis-timeline .vis-point').forEach(function (point) {
-        points[point.getAttribute('cx')] = point;
-    });
-    points.sort();
-    console.log(points);
-};
-
 window.onload = function () {
-    var items = generateItems(48);
+    var items = generateItems(24);
+    var groups = getGroups(items);
 
-    var Graph2d = new vis.Graph2d(document.getElementById('graph'), items, getGroups(groupLength), options);
+    new vis.Graph2d(document.getElementById('graph'), items, groups, options);
 
     addLabelColor();
-    connectPoints();
-    //removeIntermediatePoints();
-
-    //Graph2d.on('rangechanged', removeIntermediatePoints);
 };
